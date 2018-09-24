@@ -9,7 +9,7 @@ var url = 'http://localhost:' + port;
 
 // Nested parameters are also supported
 
-var validation = function(req, res) {
+var validation = function(req, res, next) {
   req.assert(['user', 'fields', 'email'], 'not empty').notEmpty();
   req.assert('user.fields.email', 'not empty').notEmpty();
   req.assert(['user', 'fields', 'email'], 'valid email required').isEmail();
@@ -17,17 +17,17 @@ var validation = function(req, res) {
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
-    return;
+    return next();
   }
   res.send(req.body);
+  return next();
 };
 var app = new App(port, validation);
 app.start();
 
 function fail(body) {
   assert.deepEqual(body[0].msg, 'not empty');
-  assert.deepEqual(body[1].msg, 'not empty');
-  assert.deepEqual(body[2].msg, 'valid email required');
+  assert.deepEqual(body[1].msg, 'valid email required');
 }
 function pass(body) {
   assert.deepEqual(body, {

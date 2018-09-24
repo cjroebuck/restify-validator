@@ -23,9 +23,9 @@
     "validator": "1.1.1"
   },
   "devDependencies": {
-    "async": "~0.1.22",
-    "request": "~2.10.0",
-    "restify": "~1.4.4"
+    "async": "~2.6.1",
+    "request": "~2.88.0",
+    "restify": "~7.2.1"
   },
   "keywords": [
     "restify",

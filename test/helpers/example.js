@@ -6,7 +6,7 @@ var util = require('util'),
 app.use(restify.bodyParser());
 app.use(restifyValidator);
 
-app.post('/:urlparam', function(req, res) {
+app.post('/:urlparam', function(req, res, next) {
 
   req.assert('postparam', 'Invalid postparam').notEmpty().isInt();
   req.assert('getparam', 'Invalid getparam').isInt();
@@ -17,13 +17,14 @@ app.post('/:urlparam', function(req, res) {
   var errors = req.validationErrors();
   if (errors) {
     res.send('There have been validation errors: ' + util.inspect(errors), 500);
-    return;
+    return next();
   }
   res.send({
     urlparam: req.params['urlparam'],
     getparam: req.params['getparam'],
     postparam: req.params['postparam']
   });
+  return next();
 });
 
 app.listen(8888);
