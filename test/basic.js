@@ -16,16 +16,17 @@ var util = require('util');
 // POST params.
 
 var errorMessage = 'Parameter is not an integer';
-var validation = function(req, res) {
+var validation = function(req, res, next) {
   // console.log('params: ' +util.inspect(req.params));
   req.assert('testparam', errorMessage).notEmpty().isInt();
 
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
-    return;
+    return next();
   }
   res.send({testparam: req.params['testparam']});
+  return next();
 };
 var app = new App(port, validation);
 app.start();
@@ -42,13 +43,13 @@ function pass(body) {
 
 var tests = [
   // Test URL param
-  async.apply(req, 'get', url + '/test', fail),
-  async.apply(req, 'get', url + '/123', pass),
-  async.apply(req, 'post', url + '/test', fail),
+  async.apply(req, 'get', url + '/test123', fail),
+  async.apply(req, 'get', url + '/123', pass ),
+  async.apply(req, 'post', url + '/test123', fail),
   async.apply(req, 'post', url + '/123', pass),
 
   // // // Test GET param and URL over GET param precedence
-  async.apply(req, 'get', url + '/test?testparam=gettest', fail),
+  async.apply(req, 'get', url + '/test123?testparam=gettest', fail),
   async.apply(req, 'get', url + '/123?testparam=gettest', pass),
   async.apply(req, 'get', url + '/123?testparam=gettest', pass),
   async.apply(req, 'get', url + '/?testparam=test', fail),

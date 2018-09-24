@@ -9,16 +9,17 @@ var url = 'http://localhost:' + port;
 
 // Error descriptions can be selected in a mapped way
 
-var validation = function(req, res) {
+var validation = function(req, res, next) {
   req.assert('email', 'required').notEmpty();
   req.assert('email', 'valid email required').isEmail();
 
   var errors = req.validationErrors(true);
   if (errors) {
     res.send(errors);
-    return;
+    return next();
   }
   res.send({email: req.params['email']});
+  return next();
 };
 var app = new App(port, validation);
 app.start();

@@ -10,15 +10,16 @@ var url = 'http://localhost:' + port;
 // Restify routes can be defined using regular expressions
 
 var errorMessage = 'Parameter is not a 3 digit integer';
-var validation = function(req, res) {
-  req.assert(0, errorMessage).len(3,3).isInt();
+var validation = function(req, res, next) {
+  req.assert('testnum', errorMessage).len(3,3).isInt();
 
   var errors = req.validationErrors();
   if (errors) {
     res.send(errors);
-    return;
+    return next();
   }
-  res.send([req.params[0]]);
+  res.send([req.params['testnum']]);
+  return next();
 };
 var app = new App(port, validation);
 app.start();
