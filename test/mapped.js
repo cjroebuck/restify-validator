@@ -18,7 +18,14 @@ var validation = function(req, res, next) {
     res.send(errors);
     return next();
   }
-  res.send({email: req.params['email']});
+
+  if (req.query && req.query['email']) {
+    res.send({email: req.query['email']});
+  } else if (req.body && req.body['email']) {
+    res.send({email: req.body['email']});
+  } else {
+    res.send({email: req.params['email']});
+  }
   return next();
 };
 var app = new App(port, validation);

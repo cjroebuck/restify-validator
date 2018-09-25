@@ -13,11 +13,15 @@ App.prototype.start = function() {
   var self = this;
   self.app = restify.createServer();
 
-  self.app.use(restify.plugins.queryParser({ mapParams: true }));
-  self.app.use(restify.plugins.bodyParser({ mapParams: true }));
+  // mapParams is false by default from 5.x
+  // See http://restify.com/docs/4to5/ in detail
+  self.app.use(restify.plugins.queryParser({ mapParams: false }));
+  self.app.use(restify.plugins.bodyParser({ mapParams: false }));
 
   self.app.use(restifyValidator);
 
+  // RegExp usage was changed from 7.x
+  // See http://restify.com/docs/6to7/ in detail
   self.app.get('/test:testnum(^\\d+)', self.validation);
   self.app.get('/', self.validation);
   self.app.post('/', self.validation);
